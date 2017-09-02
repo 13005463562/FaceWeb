@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Face3", "Face3\Face3.csproj", "{6499715E-983A-405B-98CD-B119573FCF3D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewFace", "NewFace\NewFace.csproj", "{FC012C70-B294-4A38-A095-609B201A0003}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewFaceWeb", "NewFaceWeb\NewFaceWeb.csproj", "{9FCE855F-B521-4668-9087-393134697234}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6499715E-983A-405B-98CD-B119573FCF3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6499715E-983A-405B-98CD-B119573FCF3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6499715E-983A-405B-98CD-B119573FCF3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6499715E-983A-405B-98CD-B119573FCF3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC012C70-B294-4A38-A095-609B201A0003}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC012C70-B294-4A38-A095-609B201A0003}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC012C70-B294-4A38-A095-609B201A0003}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC012C70-B294-4A38-A095-609B201A0003}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FCE855F-B521-4668-9087-393134697234}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FCE855F-B521-4668-9087-393134697234}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FCE855F-B521-4668-9087-393134697234}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FCE855F-B521-4668-9087-393134697234}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
