@@ -198,9 +198,7 @@ namespace NewFace.Handler
         /// <returns></returns>
         static Com.KingFaceDetect.faceDetectedObj Run1(Mat image)
         {
-            List<Rectangle> faces = new List<Rectangle>();
-            List<Rectangle> eyes = new List<Rectangle>();
-
+           
             if (HttpContext.Current.Application["detect"] == null)
            {
                HttpContext.Current.Application["detect"] = new Com.KingFaceDetect();  //存入全局 否则好像会报内存错误
