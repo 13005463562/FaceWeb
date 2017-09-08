@@ -18,8 +18,8 @@ namespace NewFace.Com
 {
     class KingFaceDetect
     {
-        private string FaceSamplesPath =System.Web.HttpContext.Current. Server.MapPath("~/") + "\\trainedFaces";
-        private CascadeClassifier faceClassifier = new CascadeClassifier(System.Web.HttpContext.Current. Server.MapPath("~/")+"\\haarcascade_frontalface_default.xml");
+        private string FaceSamplesPath =System.Web.HttpContext.Current. Server.MapPath("~/") + "\\trainedFaces"; //这个是训练库文件夹 需要手动复制到项目根目录下
+        private CascadeClassifier faceClassifier = new CascadeClassifier(System.Web.HttpContext.Current. Server.MapPath("~/")+"\\haarcascade_frontalface_default.xml"); //这个文件也放根目录
         TrainedFaceRecognizer tfr;
 
         public KingFaceDetect()
@@ -116,27 +116,21 @@ namespace NewFace.Com
             {
                 foreach (Rectangle face in fdo.facesRectangle)
                 {
-                   // g.DrawRectangle(new Pen(Color.Red, 2), face);//给识别出的人脸画矩形框
-
+                
                     Image<Gray, byte> GrayFace = tempImg.Copy(face).Resize(100, 100, Emgu.CV.CvEnum.Inter.Cubic);
                     GrayFace._EqualizeHist();//得到均衡化人脸的灰度图像
 
                     #region 得到匹配姓名
                     Emgu.CV.Face.FaceRecognizer.PredictionResult pr = tfr.faceRecognizer.Predict(GrayFace);
                     string name = "";
-                    
-                    if (pr.Distance > 50)
+
+                    //Distance越小表示 越可能是同一个人
+                    if (pr.Distance <4000)
                     {
                         name = tfr.trainedFileList.trainedFileName[pr.Label].ToString();
                     }
-                   // string recogniseName = tfr.trainedFileList.trainedFileName[pr.Label].ToString();
-                    //Font font = new Font("宋体",16,GraphicsUnit.Pixel);
-                    //SolidBrush fontLine = new SolidBrush(Color.Yellow);
-                    //float xPos = face.X + (face.Width / 2 - (name.Length * 14) / 2);
-                    //float yPos = face.Y - 21;
-                    //g.DrawString(name, font, fontLine, xPos, yPos);
+                 
                     #endregion
-
                     fdo.names.Add(name);
                 }
             }

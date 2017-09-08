@@ -6,12 +6,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title></title>
-    <style type="text/css">
-        .face {
-            position: absolute;
-            border: 2px solid #FFF;
-        }
-    </style>
+  
 
     <script src="~/Scripts/jquery-1.8.3.min.js"></script>
 </head>
@@ -29,10 +24,18 @@
     <br />
     <br />
     <br />
-    <a href="/home/add" style="margin-left: 500px;">点这里开启视频截图录入你的信息</a>
-    <script>
-      
+    <br />
+  
+    <input type="button" value="截图" style="margin-left: 500px;" id="parse" />
+    
+    <img id="saveImg" src="" style="display:none" />
+    <br />
+    <br />
+    <input name="Name" id="Name" type="text" placeholder="请输入你的名字" style="height: 30px; width: 100px; margin-left: 500px;" />
 
+    <input type="button" value="提交" id="submit" />
+    <script>
+     
 
         function dataURItoBlob(dataURI) {
             var byteString = atob(dataURI.split(',')[1]),
@@ -57,17 +60,12 @@
                 navigator.getUserMedia({ "video": true }, function (stream) {
                     video.src = webkitURL.createObjectURL(stream);
                     // video.play();
-
-
-
                     startWS();
                 }, errBack);
             } else if (navigator.webkitGetUserMedia) { // WebKit-prefixed
                 navigator.webkitGetUserMedia({ "video": true }, function (stream) {
                     video.src = window.webkitURL.createObjectURL(stream);
                     // video.play();
-
-
                     startWS();
                 }, errBack);
             }
@@ -75,9 +73,6 @@
                 navigator.mozGetUserMedia({ "video": true }, function (stream) {
                     video.src = window.URL.createObjectURL(stream);
                     //video.play();
-
-
-
                     startWS();
                 }, errBack);
             };
@@ -85,16 +80,9 @@
             function errBack() {
                 console.log('err');
             }
-            //navigator.webkitGetUserMedia({ "video": true }, function (stream) {
-            //    video.src = webkitURL.createObjectURL(stream);
-            //    startWS();
-            //}, function (err) {
-            //    console.log('err');
-            //});
-
-            //x,y,w,h
+         
             var _draw = function (pArr) {
-                canvasFace[0].height = canvasFace[0].height;
+                canvasFace[0].height = canvasFace[0].height;//重设height以清除画布
                 ctx2.strokeStyle = "#EEEE00";
                 ctx2.fillStyle = 'rgba(0,0,0,0.0)';
                 ctx2.lineWidth = 2;
@@ -109,18 +97,15 @@
                 }
 
                 var obj = $.parseJSON(pArr);
-
-
-
-
                 for (var i = 0, l = obj.length; i < l; i++) {
-                    // ctx2.strokeRect(obj[i].X, obj[i].Y, obj[i].W, obj[i].H);
-                    var left = obj[i].X;
-                    var top = obj[i].Y;
-                    var width = obj[i].W;
-                    var height = obj[i].H;
-                    var name = obj[i].N;
+                   
+                    var left = obj[i].X; //左上角x坐标
+                    var top = obj[i].Y;//左上角y坐标
+                    var width = obj[i].W; //宽
+                    var height = obj[i].H;//高
+                    var name = obj[i].N;//姓名
 
+                    //画方框
                     ctx2.moveTo(left, top);
                     ctx2.lineTo(left + width, top);
                     ctx2.lineTo(left + width, top + height);
@@ -128,29 +113,25 @@
                     ctx2.lineTo(left, top);
                     ctx2.stroke();
 
-
-                    //从坐标点(50,50)开始绘制文字
+                    //从坐标点(50,50)开始绘制姓名
                     ctx2.fillText(name, left - 30, top - 30);
                 }
 
             };
 
             var startWS = function () {
-
-
-
                 var ws = new WebSocket("ws://119.23.237.231:8082/Handler/GetFacePosition.ashx");
                 ws.onopen = function () {
                     console.log('Opened WS!');
-
 
                 };
                 ws.onmessage = function (msg) {
                     _draw(msg.data);
                     canSend = true;
 
-                    var timestamp = new Date().getTime();
-                    console.log("end=" + timestamp);
+                    //记录每次连接的时间
+                    //var timestamp = new Date().getTime();
+                    //console.log("end=" + timestamp);
                 };
                 ws.onclose = function (msg) {
                     console.log('socket close!');
@@ -159,10 +140,8 @@
                     ctx.drawImage(video, 0, 0, 320, 240);
                     if (ws.readyState == WebSocket.OPEN && canSend) {
                         canSend = false;
-                        var data = canvas.get()[0].toDataURL('image/jpeg', 0.3),
+                        var data = canvas.get()[0].toDataURL('image/jpeg', 0.3), //把画布转base64 压缩比例0.3 
                         newblob = dataURItoBlob(data);
-
-
 
                         ws.send(newblob);
                         //ws.send("123");
@@ -170,6 +149,48 @@
                 }, 60);
             };
         });
+
+
+
+
+        //
+        $("#submit").click(function () {
+            var img = $("#saveImg").attr("src");
+            var name = $("#Name").val();
+
+            if (img == "") {
+                alert("请先截取图片");
+                return;
+            }
+            if (name == "") {
+                alert("请输入姓名");
+                return;
+            }
+
+            $.ajax({
+                type: "post",
+                async: false,
+                data: { name: name, img: img },
+                url: "/Home/AddFaceInfor",
+                success: function (data) {
+                    alert(data);
+                    //if (data.result) {
+                    //    alert("success!");
+                    //} else {
+                    //    alert(data.msg);
+                    //}
+                }
+            })
+        })
+        $("#parse").click(function () {
+           // ws.close(); //关闭TCP连接
+            var src = $('#canvas').get()[0].toDataURL("image/jpeg", 1);
+            if (src != "") {
+                $("#saveImg").attr("src", src);
+                $("#saveImg").show();
+            }
+
+        })
     </script>
 </body>
 </html>

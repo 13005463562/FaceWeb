@@ -46,8 +46,6 @@ namespace NewFace.Handler
             try
             {
                 WebSocket socket = context.WebSocket;
-               
-
                 byte[] receiveBuffer = new byte[_maxBufferSize];
                 ArraySegment<byte> buffer = new ArraySegment<byte>(receiveBuffer);
 
@@ -136,16 +134,16 @@ namespace NewFace.Handler
             sb.Append("[");
 
           
-            Image img =Com.Other. GetImageByBytes(data); //只能是system.drawing.image能读入，Mat和emgu的image读不了
-            Bitmap bmpImage = new Bitmap(img); //这是关键，国外网站看到的
-            Emgu.CV.Image<Bgr, Byte> currentFrame = new Emgu.CV.Image<Bgr, Byte>(bmpImage);  //只能这么转
-
+            //把byte[]转成mat 找了好久找到的方法
+            Image img =Com.Other. GetImageByBytes(data); 
+            Bitmap bmpImage = new Bitmap(img); 
+            Emgu.CV.Image<Bgr, Byte> currentFrame = new Emgu.CV.Image<Bgr, Byte>(bmpImage);  
             Mat invert = new Mat();
-            CvInvoke.BitwiseAnd(currentFrame, currentFrame, invert);  //这是官网上的方法，变通用。没看到提供其它方法直接转换的。
+            CvInvoke.BitwiseAnd(currentFrame, currentFrame, invert);  
 
             if (invert != null)
             {
-                Com.KingFaceDetect.faceDetectedObj faces = Run1(invert);
+                Com.KingFaceDetect.faceDetectedObj faces = Run1(invert); //得到识别到的脸
                 for (int i = 0; i < faces.facesRectangle.Count; i++)
                 {
                     sb.AppendFormat("{{\"X\":{0},\"Y\":{1},\"W\":{2},\"H\":{3},\"N\":\"{4}\"}},", faces.facesRectangle[i].X, faces.facesRectangle[i].Y, faces.facesRectangle[i].Width, faces.facesRectangle[i].Height, faces.names[i]);
