@@ -27,7 +27,7 @@ namespace NewFace.Handler
     public class AddFaceInfor : IHttpHandler
     {
 
-        private static string phy;
+        private static string rootPath;
         private int _maxBufferSize = 256 * 1024;
 
         public void ProcessRequest(HttpContext context)
@@ -35,7 +35,7 @@ namespace NewFace.Handler
 
             if (context.IsWebSocketRequest)
             {
-                phy = context.Request.PhysicalApplicationPath;
+                rootPath = context.Request.PhysicalApplicationPath;
 
                 context.AcceptWebSocketRequest(ProcessWSChat);
             }
@@ -181,7 +181,7 @@ namespace NewFace.Handler
 
 
             Com.DetectFace.Detect(
-        image, phy + "haarcascade_frontalface_default.xml", phy + "haarcascade_eye.xml",
+        image, rootPath + "haarcascade_frontalface_default.xml", rootPath + "haarcascade_eye.xml",
         faces, eyes,
         tryUseCuda,
         out detectionTime);

@@ -27,7 +27,7 @@ namespace NewFace.Handler
     public class GetFacePosition : IHttpHandler
     {
 
-        private static string phy;
+        private static string rootPath;
         private int _maxBufferSize = 256 * 1024;
 
         public void ProcessRequest(HttpContext context)
@@ -35,7 +35,7 @@ namespace NewFace.Handler
         
             if (context.IsWebSocketRequest)
             {
-                phy = context.Request.PhysicalApplicationPath;
+                rootPath = context.Request.PhysicalApplicationPath;
                
                 context.AcceptWebSocketRequest(ProcessWSChat);
             }
@@ -91,18 +91,14 @@ namespace NewFace.Handler
 
             StringBuilder sb = new StringBuilder();
             sb.Append("[");
-
-           
-
+            
             Image img =Com.Other. GetImageByBytes(data);// Properties.Resources.Form3_PIC_00;  //只能是system.drawing.image能读入，Mat和emgu的image读不了
             Bitmap bmpImage = new Bitmap(img); //这是关键，国外网站看到的
             Emgu.CV.Image<Bgr, Byte> currentFrame = new Emgu.CV.Image<Bgr, Byte>(bmpImage);  //只能这么转
 
             Mat invert = new Mat();
             CvInvoke.BitwiseAnd(currentFrame, currentFrame, invert);  //这是官网上的方法，变通用。没看到提供其它方法直接转换的。
-
-          
-
+            
             if (invert != null)
             {
                 List<Rectangle> faces = Run(invert);
@@ -179,7 +175,7 @@ namespace NewFace.Handler
 
 
            Com. DetectFace.Detect(
-       image, phy + "haarcascade_frontalface_default.xml", phy + "haarcascade_eye.xml",
+       image, rootPath + "haarcascade_frontalface_default.xml", rootPath + "haarcascade_eye.xml",
        faces, eyes,
        tryUseCuda,
        out detectionTime);

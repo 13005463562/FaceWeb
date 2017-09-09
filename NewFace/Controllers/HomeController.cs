@@ -55,7 +55,7 @@ namespace NewFace.Controllers
             {
                 return Content("没有识别出来");
             }
-            
+            HttpContext.Application["detect"] = null;  //重新加载这个东西
             return Content("ok");
         }
 

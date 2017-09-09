@@ -13,6 +13,8 @@ namespace NewFace
         {
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+
+          
         }
     }
 }
